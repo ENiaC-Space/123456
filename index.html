@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENiaC DeFi Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i>
+                    <span>ENiaC</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                        <li><a href="#" class="nav-link" data-page="airdrop">Airdrop</a></li>
+                        <li><a href="#" class="nav-link" data-page="earn">Earn</a></li>
+                        <li><a href="#" class="nav-link" data-page="swap">Swap</a></li>
+                        <li><a href="#" class="nav-link" data-page="prediction">Prediction</a></li>
+                        <li><a href="#" class="nav-link" data-page="blog">Blog</a></li>
+                    </ul>
+                </nav>
+                <button id="connectWallet" class="wallet-connect">Connect Wallet</button>
+                <div id="walletInfo" class="wallet-connected" style="display: none;">
+                    <i class="fas fa-wallet"></i>
+                    <span id="walletAddress"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Home Page -->
+            <section id="home" class="page active">
+                <div class="hero">
+                    <h1>Trade, Earn, and Win Crypto</h1>
+                    <p>The most popular AMM on BSC by user count! Earn ENIA through yield farming, then stake it in Pools to earn more tokens! Initial Farm Offerings, NFTs, and more.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" id="tradeNowBtn">Trade Now</button>
+                        <button class="btn btn-secondary">Learn More</button>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Total Value Locked (TVL)</h3>
+                        <div class="value" id="tvlValue">$2.45B</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ENIA Price</h3>
+                        <div class="value" id="eniaPrice">$3.85</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Users</h3>
+                        <div class="value">1.2M</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Trades</h3>
+                        <div class="value">45.6M</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Airdrop Page -->
+            <!-- Thay thế phần Airdrop hiện tại bằng phần này -->
+
+<!-- Airdrop Page -->
+<section id="airdrop" class="page">
+    <div class="airdrop-container">
+        <div class="airdrop-header">
+            <h2>ENIA Airdrop & Presale</h2>
+            <p>Claim free ENIA tokens and participate in our presale using the same referral</p>
+        </div>
+        
+        <div class="airdrop-content active">
+            <!-- Combined Airdrop & Presale Info -->
+            <div class="airdrop-info">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Airdrop Status:</span>
+                        <span class="info-value" id="airdropStatus">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tokens Available:</span>
+                        <span class="info-value" id="airdropTokens">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Presale Status:</span>
+                        <span class="info-value" id="presaleStatus">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Presale Price:</span>
+                        <span class="info-value" id="presalePrice">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="presale-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="presaleProgress" style="width: 0%"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="presaleRaised">Raised: 0 BNB</span>
+                    <span id="presaleTarget">Target: 0 BNB</span>
+                </div>
+            </div>
+            
+            <!-- Referral Section (CHUNG CHO CẢ AIRDROP VÀ PRESALE) -->
+            <div class="referral-section">
+                <h3>Your Referral Link</h3>
+                <p>Share this link to earn rewards from both airdrop and presale</p>
+                <div class="referral-link">
+                    <input type="text" id="referralLink" class="form-control" value="Connect wallet to generate referral" readonly>
+                    <button class="btn-copy" id="copyReferral"><i class="fas fa-copy"></i></button>
+                </div>
+                <p class="referral-note">Earn 10% from airdrop claims and 5% from presale purchases using your referral link</p>
+            </div>
+            
+            <!-- Airdrop Claim Form -->
+            <div class="airdrop-form">
+                <h3>Claim Airdrop</h3>
+                <div class="form-group">
+                    <label for="referralAddress">Referral Address (Optional)</label>
+                    <input type="text" id="referralAddress" class="form-control" placeholder="Enter referral address">
+                </div>
+                <button class="btn btn-primary" id="claimAirdropBtn">
+                    <span class="btn-text">Claim Airdrop</span>
+                    <div class="loading" style="display: none;"></div>
+                </button>
+            </div>
+            
+            <!-- Presale Participation Form -->
+            <div class="presale-form">
+                <h3>Participate in Presale</h3>
+                <div class="form-group">
+                    <label for="presaleAmount">BNB Amount</label>
+                    <input type="number" id="presaleAmount" class="form-control" placeholder="Enter BNB amount">
+                </div>
+                <div class="form-group">
+                    <label for="referralAddressPresale">Referral Address (Optional - Same as above)</label>
+                    <input type="text" id="referralAddressPresale" class="form-control" placeholder="Enter referral address (same as airdrop)">
+                </div>
+                <button class="btn btn-primary" id="participatePresaleBtn">
+                    <span class="btn-text">Participate in Presale</span>
+                    <div class="loading" style="display: none;"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+                    <!-- Presale Tab -->
+                    <div class="airdrop-content" data-content="presale">
+                        <div class="airdrop-header">
+                            <h2>ENIA Presale</h2>
+                            <p>Participate in the ENIA token presale with exclusive bonuses</p>
+                        </div>
+                        <div class="airdrop-info">
+                            <p><strong>Presale Status:</strong> <span id="presaleStatus">Loading...</span></p>
+                            <p><strong>Presale Price:</strong> <span id="presalePrice">Loading...</span></p>
+                            <p><strong>Soft Cap:</strong> <span id="softCap">Loading...</span></p>
+                            <p><strong>Hard Cap:</strong> <span id="hardCap">Loading...</span></p>
+                        </div>
+                        <div class="presale-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="presaleProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span id="presaleRaised">Raised: 0 BNB</span>
+                                <span id="presaleTarget">Target: 0 BNB</span>
+                            </div>
+                        </div>
+                        <div class="airdrop-form">
+                            <div class="form-group">
+                                <label for="presaleAmount">BNB Amount</label>
+                                <input type="number" id="presaleAmount" class="form-control" placeholder="Enter BNB amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="presaleReferral">Referral Address (Optional)</label>
+                                <input type="text" id="presaleReferral" class="form-control" placeholder="Enter referral address">
+                            </div>
+                            <button class="btn btn-primary" id="participatePresale">
+                                <span id="participatePresaleText">Participate in Presale</span>
+                                <div class="loading" id="participatePresaleLoading" style="display: none;"></div>
+                            </button>
+                        </div>
+                        <div class="referral-section">
+                            <h3>Your Referral Link</h3>
+                            <div class="referral-link">
+                                <input type="text" id="presaleReferralLink" class="form-control" value="Connect wallet to generate referral" readonly>
+                                <button class="btn-copy" id="copyPresaleReferral"><i class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Earn 5% bonus tokens for every participant who uses your referral link</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earn Page -->
+            <section id="earn" class="page">
+                <div class="earn-tabs">
+                    <div class="tab active" data-tab="farms">Farms</div>
+                    <div class="tab" data-tab="pools">Pools</div>
+                    <div class="tab" data-tab="staking">Staking</div>
+                </div>
+                <div class="tab-content">
+                    <div class="pool-cards" id="poolCards">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Swap Page -->
+            <section id="swap" class="page">
+                <div class="swap-layout">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <div class="chart-tabs">
+                                <div class="chart-tab active" data-pair="ENIAUSDT">ENIA/USDT</div>
+                                <div class="chart-tab" data-pair="BNBUSDT">BNB/USDT</div>
+                                <div class="chart-tab" data-pair="ETHUSDT">ETH/USDT</div>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div id="tv-chart"></div>
+                        </div>
+                    </div>
+                    <div class="swap-container">
+                        <div class="swap-tabs">
+                            <div class="swap-tab active" data-swap-tab="swap">Swap</div>
+                            <div class="swap-tab" data-swap-tab="liquidity">Liquidity</div>
+                        </div>
+                        
+                        <!-- Swap Tab -->
+                        <div class="swap-tab-content active" data-swap-content="swap">
+                            <div class="swap-header">
+                                <h2>Swap</h2>
+                                <div class="swap-settings" id="swapSettings">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                            </div>
+                            <div class="swap-input">
+                                <div class="input-header">
+                                    <span class="input-label">From</span>
+                                    <span class="input-balance" id="fromBalance">Balance: 0.00</span>
+                                </div>
+                                <div class="input-field">
+                                    <input type="number" placeholder="0.0" id="fromAmount">
+                                    <div class="token-selector" id="fromTokenSelector">
+                                        <div class="token-icon-small">BNB</div>
+                                        <span>BNB</span>
+                                        <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swap-arrow" id="swapDirection">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="swap-input">
+                                <div class="input-header">
+                                    <span class="input-label">To</span>
+                                    <span class="input-balance" id="toBalance">Balance: 0.00</span>
+                                </div>
+                                <div class="input-field">
+                                    <input type="number" placeholder="0.0" id="toAmount" readonly>
+                                    <div class="token-selector" id="toTokenSelector">
+                                        <div class="token-icon-small">ENIA</div>
+                                        <span>ENIA</span>
+                                        <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swap-info">
+                                <div class="detail-row">
+                                    <span class="detail-label">Price</span>
+                                    <span id="swapPrice">1 BNB = 0 ENIA</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Slippage Tolerance</span>
+                                    <span id="slippageTolerance">0.5%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary swap-button" id="swapButton">Swap</button>
+                        </div>
+                        
+                        <!-- Liquidity Tab -->
+                        <div class="swap-tab-content" data-swap-content="liquidity">
+                            <div class="swap-header">
+                                <h2>Liquidity</h2>
+                            </div>
+                            <div class="swap-input">
+                                <div class="input-header">
+                                    <span class="input-label">Token A</span>
+                                    <span class="input-balance">Balance: 0.00</span>
+                                </div>
+                                <div class="input-field">
+                                    <input type="number" placeholder="0.0" id="liquidityTokenA">
+                                    <div class="token-selector" id="liquidityTokenASelector">
+                                        <div class="token-icon-small">BNB</div>
+                                        <span>BNB</span>
+                                        <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swap-input">
+                                <div class="input-header">
+                                    <span class="input-label">Token B</span>
+                                    <span class="input-balance">Balance: 0.00</span>
+                                </div>
+                                <div class="input-field">
+                                    <input type="number" placeholder="0.0" id="liquidityTokenB">
+                                    <div class="token-selector" id="liquidityTokenBSelector">
+                                        <div class="token-icon-small">ENIA</div>
+                                        <span>ENIA</span>
+                                        <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary swap-button" id="addLiquidityButton">Add Liquidity</button>
+                            
+                            <div class="liquidity-pools" id="liquidityPools">
+                                <!-- Your liquidity pools will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Prediction Page -->
+            <section id="prediction" class="page">
+                <div class="prediction-layout">
+                    <div class="prediction-chart-container">
+                        <div class="chart-header">
+                            <div class="chart-tabs">
+                                <div class="chart-tab active" data-pair="BNBUSDT">BNB/USDT</div>
+                                <div class="chart-tab" data-pair="ENIAUSDT">ENIA/USDT</div>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div id="prediction-chart"></div>
+                        </div>
+                    </div>
+                    <div class="prediction-container">
+                        <div class="prediction-header">
+                            <h2>Prediction</h2>
+                            <p>Predict the price direction of BNB/USDT</p>
+                        </div>
+                        <div class="prediction-status">
+                            <span class="status-live">LIVE</span>
+                            <span id="currentRound">Round #1258</span>
+                        </div>
+                        <div class="prediction-pair">
+                            <h3 id="predictionPair">BNB/USDT</h3>
+                        </div>
+                        <div class="prediction-info">
+                            <div class="detail-row">
+                                <span class="detail-label">Locked Price</span>
+                                <span id="lockedPrice">$325.45</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Prize Pool</span>
+                                <span id="prizePool">12,500 ENIA</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Countdown</span>
+                                <span id="predictionCountdown">02:45</span>
+                            </div>
+                        </div>
+                        <div class="prediction-actions">
+                            <div class="prediction-btn prediction-up" id="predictUp">
+                                UP
+                            </div>
+                            <div class="prediction-btn prediction-down" id="predictDown">
+                                DOWN
+                            </div>
+                        </div>
+                        <div class="prediction-input">
+                            <div class="form-group">
+                                <label for="predictionAmount">Bet Amount (ENIA)</label>
+                                <input type="number" id="predictionAmount" class="form-control" placeholder="0.0">
+                            </div>
+                        </div>
+                        <div class="bet-amounts">
+                            <div class="bet-amount" data-amount="10">10</div>
+                            <div class="bet-amount" data-amount="50">50</div>
+                            <div class="bet-amount active" data-amount="100">100</div>
+                            <div class="bet-amount" data-amount="500">500</div>
+                            <div class="bet-amount" data-amount="1000">1000</div>
+                        </div>
+                        <button class="btn btn-primary" id="placeBet">Place Bet</button>
+                        
+                        <div class="prediction-history" id="predictionHistory" style="margin-top: 20px;">
+                            <h4>Your Predictions</h4>
+                            <!-- Prediction history will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog Page -->
+            <section id="blog" class="page">
+                <div class="blog-container">
+                    <div class="blog-header">
+                        <h2>Crypto News & Updates</h2>
+                        <p>Stay updated with the latest news in the cryptocurrency world</p>
+                    </div>
+                    <div class="blog-posts" id="blogPosts">
+                        <!-- Blog posts will be loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Token Selector Modal -->
+    <div class="modal" id="tokenModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select a Token</h3>
+                <button class="modal-close" id="closeTokenModal">&times;</button>
+            </div>
+            <input type="text" class="token-search" id="tokenSearch" placeholder="Search token name or address">
+            <div class="token-list" id="tokenList">
+                <!-- Tokens will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Swap Settings</h3>
+                <button class="modal-close" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="slippageInput">Slippage Tolerance (%)</label>
+                <input type="number" id="slippageInput" class="form-control" value="0.5" min="0.1" max="50" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="deadlineInput">Transaction Deadline (minutes)</label>
+                <input type="number" id="deadlineInput" class="form-control" value="20" min="1" max="60">
+            </div>
+            <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i>
+                    <span>ENiaC</span>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-medium"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Docs</a>
+                    <a href="#">Audit</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2023 ENiaC. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
